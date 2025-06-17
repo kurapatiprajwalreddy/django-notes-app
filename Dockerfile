@@ -1,20 +1,26 @@
-# Base image
+# Use the official Python image as the base
 FROM python:3.9
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app/backend
 
-# Copy the dependencies file
+# Update and install system dependencies required for mysqlclient
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y gcc default-libmysqlclient-dev pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file into the container
 COPY requirements.txt /app/backend
 
-# Install dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
+# Copy the rest of the application code into the container
 COPY . /app/backend
 
-# Expose the port (runtime only)
+# Expose the application port (Django default is 8000)
 EXPOSE 8000
 
-# Set the command to run the Django application
+# Default command to run Django's development server
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
