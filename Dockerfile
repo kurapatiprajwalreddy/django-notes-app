@@ -4,10 +4,14 @@ FROM python:3.9
 # Set the working directory inside the container
 WORKDIR /app/backend
 
-# Update and install system dependencies required for mysqlclient
+# Install system-level dependencies required for mysqlclient
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y gcc default-libmysqlclient-dev pkg-config \
+    && apt-get install -y gcc \
+       default-libmysqlclient-dev \
+       libssl-dev \
+       python3-dev \
+       pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container
